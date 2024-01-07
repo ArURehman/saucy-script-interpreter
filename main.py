@@ -1,7 +1,14 @@
 #File for running the interpreter
 from Lexer.Lexer import Lexer
+from Parser.Parser import Parser
 
-lexer = Lexer('let x = 45*(5/2)')
+fileLines = ''
+with open('example.sc', 'r') as iFile:
+    fileLines =  iFile.readlines()
+fileLines = ''.join(fileLines)
+
+lexer = Lexer(fileLines)
 tokens = lexer.tokenize()
-for token in tokens:
-    print(token)
+
+parser = Parser(tokens)
+parser.parse()

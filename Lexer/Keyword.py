@@ -9,5 +9,7 @@ class Keyword:
         'till': TokenType.TILL,
         'if': TokenType.IF,
         'elif': TokenType.ELIF,
-        'else': TokenType.ELSE  
+        'else': TokenType.ELSE,
+        'true': TokenType.BOOLEAN,
+        'false': TokenType.BOOLEAN
     }

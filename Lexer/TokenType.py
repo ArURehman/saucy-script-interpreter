@@ -1,23 +1,33 @@
 from enum import Enum, auto 
 
 class TokenType(Enum):
-    NUMBER = auto()
     IDENTIFIER = auto()
-    
+    DELIMITER = auto()
     #Assignment Operator
     EQUALS = auto()
     
+    #Data Types
+    INT = auto()
+    FLOAT = auto()
+    STRING = auto()
+    BOOLEAN = auto()
+    
     #Arithematic Operator
-    BINARY_OPERATOR = auto()
+    PLUS = auto()
+    MINUS = auto()
+    MULTIPLY = auto()
+    DIVIDE = auto()
+    POWER = auto()
     
     #Relational Operator
     RELATIONAL_OPERATOR = auto()
-    
+        
     #Literal
     LEFT_ROUND_PAREN = auto()
     RIGHT_ROUND_PAREN = auto()
     LEFT_CURLY_PAREN = auto()
     RIGHT_CURLY_PAREN = auto()
+    PUNCTUATOR = auto()
     
     #Keywords
     LET = auto()
@@ -29,4 +39,3 @@ class TokenType(Enum):
     ELSE = auto()
     
     EOF = auto()
-

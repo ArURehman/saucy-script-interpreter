@@ -21,10 +21,20 @@ class Lexer:
                 tokens.append(Token(TokenType.LEFT_CURLY_PAREN, source_char.pop(0)))
             elif source_char[0] == '}':
                 tokens.append(Token(TokenType.RIGHT_CURLY_PAREN, source_char.pop(0)))
-            elif source_char[0] in ['+', '-', '*', '/']:
-                tokens.append(Token(TokenType.BINARY_OPERATOR, source_char.pop(0)))
+            elif source_char[0] == '+':
+                tokens.append(Token(TokenType.PLUS, source_char.pop(0)))
+            elif source_char[0] == '-':
+                tokens.append(Token(TokenType.MINUS, source_char.pop(0)))
+            elif source_char[0] == '*':
+                tokens.append(Token(TokenType.MULTIPLY, source_char.pop(0)))
+            elif source_char[0] == '/':
+                tokens.append(Token(TokenType.DIVIDE, source_char.pop(0)))
+            elif source_char[0] == '^':
+                tokens.append(Token(TokenType.POWER, source_char.pop(0)))
             elif source_char[0] == '=':
                 tokens.append(Token(TokenType.EQUALS, source_char.pop(0)))
+            elif source_char[0] == ';':
+                tokens.append(Token(TokenType.DELIMITER, source_char.pop(0)))
             elif source_char[0] in ['==', '<', '>', '!', '!=', '<=', '>=']:
                 tokens.append(Token(TokenType.RELATIONAL_OPERATOR, source_char.pop(0)))
             else:
@@ -38,15 +48,25 @@ class Lexer:
                         if source_char[0] == '.':
                             dotCount += 1
                         number += source_char.pop(0)
-                    tokens.append(Token(TokenType.NUMBER, number))
                     
-                elif re.match(r'[a-zA-z_]', source_char[0]):
+                    if number.find('.'):
+                        tokens.append(Token(TokenType.FLOAT, number))
+                    else:
+                        tokens.append(Token(TokenType.INT, number))
+                    
+                elif re.match(r'[a-zA-z_\"\']', source_char[0]):
                     string = ""
-                    while len(source_char) > 0 and re.match(r'\w', source_char[0]):
+                    while len(source_char) > 0 and re.match(r'[\w\"\']', source_char[0]):
                         string += source_char.pop(0)
+                    
                     keyword = Keyword.keywords.get(string, None)
                     if keyword:
                         tokens.append(Token(keyword, string))
+                    elif string.count("'") > 0 or string.count('"'):
+                        punc_1, punc_2, string = string[0], string[-1], string[1:-1]
+                        tokens.append(Token(TokenType.PUNCTUATOR, punc_1))
+                        tokens.append(Token(TokenType.STRING, string))
+                        tokens.append(Token(TokenType.PUNCTUATOR, punc_2))
                     else:
                         tokens.append(Token(TokenType.IDENTIFIER, string))
                 
