@@ -3,6 +3,7 @@ from enum import Enum, auto
 class TokenType(Enum):
     IDENTIFIER = auto()
     DELIMITER = auto()
+    
     #Assignment Operator
     EQUALS = auto()
     
@@ -11,6 +12,7 @@ class TokenType(Enum):
     FLOAT = auto()
     STRING = auto()
     BOOLEAN = auto()
+    NULL = auto()
     
     #Arithematic Operator
     PLUS = auto()
@@ -39,4 +41,5 @@ class TokenType(Enum):
     ELIF = auto()
     ELSE = auto()
     
+    #End Of File 
     EOF = auto()

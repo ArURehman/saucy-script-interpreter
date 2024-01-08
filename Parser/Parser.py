@@ -5,6 +5,10 @@ from Parser.AST.Program import Program
 from Parser.AST.Expressions.BinaryExpression import BinaryExpression
 from Parser.AST.Expressions.Identifier import Identifier
 from Parser.AST.Expressions.NumericLiteral import NumericLiteral
+from Parser.AST.Expressions.NullLiteral import NullLiteral
+from Parser.AST.Expressions.BooleanLiteral import BooleanLiteral
+
+from Parser.AST.Statements.VariableDeclaration import VariableDeclaration
 
 from Lexer.Token import Token
 from Lexer.TokenType import TokenType as TT
@@ -36,6 +40,11 @@ class Parser:
         
         if token.token_type == TT.IDENTIFIER:
             return Identifier(self.__eat().value)
+        elif token.token_type == TT.NULL:
+            self.__eat()
+            return NullLiteral()
+        elif token.token_type == TT.BOOLEAN:
+            return BooleanLiteral(self.__eat().value)
         elif token.token_type == TT.INT:
             return NumericLiteral(int(self.__eat().value))
         elif token.token_type == TT.FLOAT:
@@ -71,14 +80,33 @@ class Parser:
             
         return left
     
-    #Calls parse function with lowest Precedence in the AST
+    # Parses variable declaration statements 
+    def __variableDeclaration(self) -> Statement:
+        let = self.__expect(TT.LET, "Unexpected Token").value 
+        identifier = self.__expect(TT.IDENTIFIER, "Unexpected Token").value
+        
+        if self.__get().token_type == TT.DELIMITER:
+            self.__eat()
+            return VariableDeclaration(identifier)
+        
+        self.__expect(TT.EQUALS, "Unexpected Token")
+
+        declaration = VariableDeclaration(identifier, self.__parseExpression())
+        self.__expect(TT.DELIMITER, "Unexpected Token")        
+        return declaration 
+    
+    # Calls parse function with lowest Precedence in the AST
     def __parseExpression(self) -> Expression:
         return self.__shiftBinaryExpression()
     
+    # Parses Statements first then expressions
     def __parseStatement(self) -> Statement:
-        #placeholder for statements to be added in future
-        return self.__parseExpression()
+        if self.__get().token_type == TT.LET:
+            return self.__variableDeclaration()
+        else:
+            return self.__parseExpression()
         
+    # Moves through each expression/statement in AST and gets it parsed
     def __produceAST(self) -> Program:
         program = Program([])
         

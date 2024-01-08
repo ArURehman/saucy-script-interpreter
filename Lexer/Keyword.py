@@ -1,15 +1,16 @@
-from Lexer.TokenType import TokenType
+from Lexer.TokenType import TokenType as TT
 
 class Keyword:
     
     keywords = {
-        'let': TokenType.LET,
-        'func': TokenType.FUNC,
-        'for': TokenType.FOR,
-        'till': TokenType.TILL,
-        'if': TokenType.IF,
-        'elif': TokenType.ELIF,
-        'else': TokenType.ELSE,
-        'true': TokenType.BOOLEAN,
-        'false': TokenType.BOOLEAN
+        'let': TT.LET,
+        'func': TT.FUNC,
+        'for': TT.FOR,
+        'till': TT.TILL,
+        'if': TT.IF,
+        'elif': TT.ELIF,
+        'else': TT.ELSE,
+        'true': TT.BOOLEAN,
+        'false': TT.BOOLEAN,
+        'null': TT.NULL
     }
