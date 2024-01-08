@@ -2,7 +2,7 @@ from Lexer.TokenType import TokenType
 
 class Token:
     
-    def __init__(self, token_type: TokenType, value: str="") -> None:
+    def __init__(self, token_type: TokenType, value: str=None) -> None:
         self.token_type = token_type
         self.value = value
         
