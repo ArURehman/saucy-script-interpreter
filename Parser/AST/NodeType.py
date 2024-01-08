@@ -7,11 +7,7 @@ class NodeType(Enum):
     #Statements
     STATEMENT = auto()
     
-    NUMERIC_LITERAL = auto()
-    NULL_LITERAL = auto()
-    IDENTIFIER = auto()
-    BOOLEAN_LITERAL = auto()
-    
+    VARIABLE_DECLARATION = auto()
     FUNC_DECLARATION = auto()
     IF_ELSE_DECLAEARTION = auto()
     FOR_LOOP_DECLARATION = auto()
@@ -20,6 +16,12 @@ class NodeType(Enum):
     
     #Expressions
     EXPRESSION = auto()
+    
+    NUMERIC_LITERAL = auto()
+    NULL_LITERAL = auto()
+    IDENTIFIER = auto()
+    BOOLEAN_LITERAL = auto()
+    
     BINARY_EXPRESSTION = auto()
     UNARY_EXPRESSION = auto()
     
