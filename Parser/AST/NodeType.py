@@ -7,6 +7,7 @@ class NodeType(Enum):
     #Statements
     STATEMENT = auto()
     NUMERIC_LITERAL = auto()
+    NULL_LITERAL = auto()
     IDENTIFIER = auto()
     FUNC_DECLARATION = auto()
     IF_ELSE_DECLAEARTION = auto()

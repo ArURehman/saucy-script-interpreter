@@ -52,9 +52,9 @@ class Lexer:
                         number += source_char.pop(0)
                     
                     if number.find('.'):
-                        tokens.append(Token(TokenType.FLOAT, number))
+                        tokens.append(Token(TokenType.FLOAT, float(number)))
                     else:
-                        tokens.append(Token(TokenType.INT, number))
+                        tokens.append(Token(TokenType.INT, int(number)))
                     
                 elif re.match(r'[a-zA-z_\"\']', source_char[0]):
                     string = ""
