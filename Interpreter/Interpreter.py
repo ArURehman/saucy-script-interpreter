@@ -9,6 +9,7 @@ from Interpreter.Environment.SymbolTable import SymbolTable
 
 from Parser.AST.NodeType import NodeType as NT
 from Parser.AST.Statement import Statement
+from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
 
 from typing import Union
 
@@ -49,6 +50,11 @@ class Interpreter:
         value = self.__evaluate(declaration.value, table) if declaration.value else NullValue()
         return table.declareVariable(declaration.identifier, value)
     
+    def __variableAssignment(self, node: AssignmentExpression, table: SymbolTable) -> RuntimeValue:
+        if node.identifier.kind != NT.IDENTIFIER:
+            raise Exception(f"Invalid Token: {node.identifier}")
+        return table.assignVariable(node.identifier.string, self.__evaluate(node.value, table))
+    
     # Runs each statement inside program 
     def __program(self, program: NT.PROGRAM, table: SymbolTable) -> RuntimeValue:
         lastEval = NullValue()
@@ -64,6 +70,8 @@ class Interpreter:
             return NumberValue(node.value)
         elif kind == NT.NULL_LITERAL:
             return NullValue()
+        elif kind == NT.ASSIGNMENT_EXPRESSION:
+            return self.__variableAssignment(node, table)
         elif kind == NT.IDENTIFIER:
             return self.__evaluateIdentifier(node.string, table)
         elif kind == NT.BINARY_EXPRESSTION:
