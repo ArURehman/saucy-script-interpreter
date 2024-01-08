@@ -103,7 +103,6 @@ class Parser:
         self.__expect(TT.EQUALS, "Unexpected Token")
 
         declaration = VariableDeclaration(identifier, self.__parseExpression())
-        self.__expect(TT.DELIMITER, "Unexpected Token")        
         return declaration 
     
     # Calls parse function with lowest Precedence in the AST

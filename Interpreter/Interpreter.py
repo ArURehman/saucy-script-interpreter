@@ -37,6 +37,9 @@ class Interpreter:
         left = self.__evaluate(binaryOperation.left, table)
         right = self.__evaluate(binaryOperation.right, table)
         
+        if not hasattr(left, 'kind') or hasattr(right, 'kind'):
+            return NullValue()
+        
         if left.kind == VT.NUMBER and right.kind == VT.NUMBER:
             return self.__makeCalculation(left.value, right.value, binaryOperation.operator.value)        
         
