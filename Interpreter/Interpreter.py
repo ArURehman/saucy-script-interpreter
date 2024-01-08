@@ -45,6 +45,10 @@ class Interpreter:
         result = table.lookupVariable(identifier)
         return result
     
+    def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
+        value = self.__evaluate(declaration.value, table) if declaration.value else NullValue()
+        return table.declareVariable(declaration.identifier, value)
+    
     # Runs each statement inside program 
     def __program(self, program: NT.PROGRAM, table: SymbolTable) -> RuntimeValue:
         lastEval = NullValue()
@@ -64,6 +68,8 @@ class Interpreter:
             return self.__evaluateIdentifier(node.string, table)
         elif kind == NT.BINARY_EXPRESSTION:
             return self.__binaryExpression(node, table)
+        elif kind == NT.VARIABLE_DECLARATION:
+            return self.__variableDeclaration(node, table)
         elif kind == NT.PROGRAM:
             return self.__program(node, table)
         else:

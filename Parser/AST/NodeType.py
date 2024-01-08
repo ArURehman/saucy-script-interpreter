@@ -23,6 +23,7 @@ class NodeType(Enum):
     BOOLEAN_LITERAL = auto()
     
     BINARY_EXPRESSTION = auto()
+    ASSIGNMENT_EXPRESSION = auto()
     UNARY_EXPRESSION = auto()
     
     
