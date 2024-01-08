@@ -1,5 +1,6 @@
 from Lexer.Lexer import Lexer
 from Parser.Parser import Parser
+from Interpreter.Interpreter import Interpreter
 
 # fileLines = ''
 # with open(input('File > '), 'r') as iFile:
@@ -16,4 +17,8 @@ tokens = lexer.tokenize()
 
 parser = Parser(tokens)
 program = parser.parse()
-print(program)
+# print(program) 
+
+interpreter = Interpreter()
+result = interpreter.interpret(program)
+print(result)
