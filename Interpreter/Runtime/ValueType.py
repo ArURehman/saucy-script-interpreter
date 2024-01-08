@@ -4,3 +4,4 @@ class ValueType(Enum):
     
     NULL = auto()
     NUMBER = auto()
+    BOOLEAN = auto()

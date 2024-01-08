@@ -3,7 +3,7 @@ from Parser.Parser import Parser
 from Interpreter.Interpreter import Interpreter
 from Interpreter.Environment.SymbolTable import SymbolTable
 
-from Interpreter.Runtime.Values.NumberValue import NumberValue
+from Interpreter.Runtime.Values.BooleanValue import BooleanValue
 
 # fileLines = ''
 # with open(input('File > '), 'r') as iFile:
@@ -16,7 +16,7 @@ fileLines = input('> ') # Only for Development
 
 table = SymbolTable()
 
-table.declareVariable('x', NumberValue(3))
+table.declareVariable('x', BooleanValue(False))
 
 lexer = Lexer(fileLines)
 tokens = lexer.tokenize()

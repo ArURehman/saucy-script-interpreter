@@ -6,6 +6,7 @@ from Parser.AST.Expressions.BinaryExpression import BinaryExpression
 from Parser.AST.Expressions.Identifier import Identifier
 from Parser.AST.Expressions.NumericLiteral import NumericLiteral
 from Parser.AST.Expressions.NullLiteral import NullLiteral
+from Parser.AST.Expressions.BooleanLiteral import BooleanLiteral
 
 from Lexer.Token import Token
 from Lexer.TokenType import TokenType as TT
@@ -40,6 +41,8 @@ class Parser:
         elif token.token_type == TT.NULL:
             self.__eat()
             return NullLiteral()
+        elif token.token_type == TT.BOOLEAN:
+            return BooleanLiteral(self.__eat().value)
         elif token.token_type == TT.INT:
             return NumericLiteral(int(self.__eat().value))
         elif token.token_type == TT.FLOAT:

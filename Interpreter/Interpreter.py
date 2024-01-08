@@ -3,6 +3,7 @@ from Interpreter.Runtime.RuntimeValue import RuntimeValue
 
 from Interpreter.Runtime.Values.NullValue import NullValue
 from Interpreter.Runtime.Values.NumberValue import NumberValue
+from Interpreter.Runtime.Values.BooleanValue import BooleanValue
 
 from Interpreter.Environment.SymbolTable import SymbolTable
 

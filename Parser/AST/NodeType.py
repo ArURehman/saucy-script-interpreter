@@ -6,9 +6,12 @@ class NodeType(Enum):
     
     #Statements
     STATEMENT = auto()
+    
     NUMERIC_LITERAL = auto()
     NULL_LITERAL = auto()
     IDENTIFIER = auto()
+    BOOLEAN_LITERAL = auto()
+    
     FUNC_DECLARATION = auto()
     IF_ELSE_DECLAEARTION = auto()
     FOR_LOOP_DECLARATION = auto()
