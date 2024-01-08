@@ -33,6 +33,8 @@ class Lexer:
                 tokens.append(Token(TokenType.POWER, source_char.pop(0)))
             elif source_char[0] == '=':
                 tokens.append(Token(TokenType.EQUALS, source_char.pop(0)))
+            elif source_char[0] == '%':
+                tokens.append(Token(TokenType.MODULUS, source_char.pop(0)))
             elif source_char[0] == ';':
                 tokens.append(Token(TokenType.DELIMITER, source_char.pop(0)))
             elif source_char[0] in ['==', '<', '>', '!', '!=', '<=', '>=']:

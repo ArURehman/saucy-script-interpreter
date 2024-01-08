@@ -11,4 +11,5 @@ lexer = Lexer(fileLines)
 tokens = lexer.tokenize()
 
 parser = Parser(tokens)
-parser.parse()
+program = parser.parse()
+print(program)

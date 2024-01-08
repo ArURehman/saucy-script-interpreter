@@ -1,52 +1,91 @@
+from Parser.AST.Expression import Expression
+from Parser.AST.Statement import Statement
+from Parser.AST.Program import Program
+
+from Parser.AST.Expressions.BinaryExpression import BinaryExpression
+from Parser.AST.Expressions.Identifier import Identifier
+from Parser.AST.Expressions.NumericLiteral import NumericLiteral
+
 from Lexer.Token import Token
 from Lexer.TokenType import TokenType as TT
-from Parser.AST.NumericLiteral import NumericLiteralNode
-from Parser.AST.BinaryOperation import BinaryOperationNode
-from Parser.AST.EndLine import EndLineNode
 
 class Parser:
     
-    def __init__(self, tokens: list[Token]) -> None:
+    def __init__(self, tokens: list[Token]=[TT.EOF]) -> None:
         self.tokens = tokens
-        self.index = 0
-        self.__advance()
         
-    def __advance(self) -> Token:
-        if self.index < len(self.tokens):
-            self.currToken = self.tokens[self.index]
-        self.index += 1
-        return self.currToken
+    def __endOfFile(self) -> bool:
+        return self.tokens[0].token_type == TT.EOF
     
-    def __factor(self) -> NumericLiteralNode:
-        token = self.currToken
-        if token.token_type in [TT.INT, TT.FLOAT]:
-            self.__advance()
-            return NumericLiteralNode(token)
+    def __get(self) -> Token:
+        return self.tokens[0]
     
-    def __term(self) -> BinaryOperationNode:
-        return self.__binaryOperation(self.__factor, [TT.MULTIPLY, TT.DIVIDE])
+    def __eat(self) -> Token:
+        return self.tokens.pop(0)
     
-    def __expr(self):
-        return self.__binaryOperation(self.__term, [TT.PLUS, TT.MINUS])
+    def __expect(self, tokenType: TT, error: str) -> Token:
+        token = self.__eat()
+        if not token or token.token_type != tokenType:
+            raise Exception(f"Error: {error} - Expected: {tokenType}")
+            exit(1)
+        return token
     
-    def __binaryOperation(self, function, operators: list[TT]) -> BinaryOperationNode:
-        left_node = function()
+    #Highest Precedence
+    def __primaryExpression(self) -> Expression:
+        token = self.__get()
         
-        while self.currToken.token_type in operators:
-            operator = self.currToken
-            self.__advance()
-            right_node = function()
-            left_node = BinaryOperationNode(left_node, operator, right_node)
+        if token.token_type == TT.IDENTIFIER:
+            return Identifier(self.__eat().value)
+        elif token.token_type == TT.INT:
+            return NumericLiteral(int(self.__eat().value))
+        elif token.token_type == TT.FLOAT:
+            return NumericLiteral(float(self.__eat().value))
+        elif token.token_type == TT.LEFT_ROUND_PAREN:
+            self.__eat()
+            value = self.__parseExpression()
+            self.__expect(TT.RIGHT_ROUND_PAREN, 'Unexpected Token')
+            return value 
+        else:
+            raise Exception(f"Unexpected Token: {token}")
+            exit(1)
+    
+    #Prcedence 2 (Used to Parse Multiplicative/Divisive/Modulus:% Expressions)
+    def __scaleBinaryExpression(self) -> Expression:
+        left = self.__primaryExpression()
         
-        return left_node
+        while self.__get().token_type in [TT.MULTIPLY, TT.DIVIDE, TT.MODULUS]:
+            operator = self.__eat()
+            right = self.__primaryExpression()
+            left = BinaryExpression(left, right, operator)
+            
+        return left
     
-    def __endOfLine(self) -> EndLineNode:
-        self.__advance()
-        if self.currToken.token_type == TT.DELIMITER:
-            return EndLineNode(self.currToken) 
+    #Prcedence 2 (Used to Parse Additive/Subtractive Expressions)
+    def __shiftBinaryExpression(self) -> Expression:
+        left = self.__scaleBinaryExpression()
+        
+        while self.__get().token_type in [TT.PLUS, TT.MINUS]:
+            operator = self.__eat()
+            right = self.__scaleBinaryExpression()
+            left = BinaryExpression(left, right, operator)
+            
+        return left
     
-    def parse(self):
-        result = self.__expr()
-        # result += self.__endOfLine()
-        print(result)
-        return result
+    #Calls parse function with lowest Precedence in the AST
+    def __parseExpression(self) -> Expression:
+        return self.__shiftBinaryExpression()
+    
+    def __parseStatement(self) -> Statement:
+        #placeholder for statements to be added in future
+        return self.__parseExpression()
+        
+    def __produceAST(self) -> Program:
+        program = Program([])
+        
+        while not self.__endOfFile():
+            program.body.append(self.__parseStatement())
+        
+        return program    
+    
+    def parse(self) -> Program:
+        return self.__produceAST()

@@ -18,6 +18,7 @@ class TokenType(Enum):
     MULTIPLY = auto()
     DIVIDE = auto()
     POWER = auto()
+    MODULUS = auto()
     
     #Relational Operator
     RELATIONAL_OPERATOR = auto()

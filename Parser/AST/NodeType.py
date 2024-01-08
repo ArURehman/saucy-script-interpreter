@@ -1,8 +1,8 @@
 from enum import Enum, auto
 
-class NodeType:
+class NodeType(Enum):
     
-    Program = auto()
+    PROGRAM = auto()
     
     #Statements
     STATEMENT = auto()
