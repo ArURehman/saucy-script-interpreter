@@ -31,7 +31,7 @@ class Parser:
     def __expect(self, tokenType: TT, error: str) -> Token:
         token = self.__eat()
         if not token or token.token_type != tokenType:
-            raise Exception(f"Error: {error} - Expected: {tokenType}")
+            raise Exception(f"Error: {error} - Token: {token} - Expected: {tokenType}")
             exit(1)
         return token
     
@@ -87,7 +87,6 @@ class Parser:
         if self.__get().token_type == TT.EQUALS:
             self.__eat()
             value = self.__assignmentExpression()
-            self.__expect(TT.DELIMITER, "Unexpected Token")
             return AssignmentExpression(leftExpr, value)
         
         return leftExpr

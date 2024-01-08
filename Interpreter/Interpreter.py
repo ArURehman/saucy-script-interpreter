@@ -42,14 +42,17 @@ class Interpreter:
         
         return NullValue()
     
+    # Evaluates to check existence of identifier 
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
         return result
     
+    # Handles variable declaration
     def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
         value = self.__evaluate(declaration.value, table) if declaration.value else NullValue()
         return table.declareVariable(declaration.identifier, value)
     
+    # Handles variable assignment
     def __variableAssignment(self, node: AssignmentExpression, table: SymbolTable) -> RuntimeValue:
         if node.identifier.kind != NT.IDENTIFIER:
             raise Exception(f"Invalid Token: {node.identifier}")
