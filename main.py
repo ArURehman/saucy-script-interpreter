@@ -1,6 +1,9 @@
 from Lexer.Lexer import Lexer
 from Parser.Parser import Parser
 from Interpreter.Interpreter import Interpreter
+from Interpreter.Environment.SymbolTable import SymbolTable
+
+from Interpreter.Runtime.Values.NumberValue import NumberValue
 
 # fileLines = ''
 # with open(input('File > '), 'r') as iFile:
@@ -11,6 +14,10 @@ from Interpreter.Interpreter import Interpreter
 
 fileLines = input('> ') # Only for Development
 
+table = SymbolTable()
+
+table.declareVariable('x', NumberValue(3))
+
 lexer = Lexer(fileLines)
 tokens = lexer.tokenize()
 # print(tokens) 
@@ -20,5 +27,5 @@ program = parser.parse()
 # print(program) 
 
 interpreter = Interpreter()
-result = interpreter.interpret(program)
+result = interpreter.interpret(program, table)
 print(result)
