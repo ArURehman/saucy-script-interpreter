@@ -84,9 +84,14 @@ class Parser:
     def __assignmentExpression(self) -> Expression:
         leftExpr = self.__shiftBinaryExpression()
         
+        if self.__get().token_type == TT.DELIMITER:
+            self.__eat()
+        
         if self.__get().token_type == TT.EQUALS:
             self.__eat()
             value = self.__assignmentExpression()
+            if self.__get().token_type == TT.DELIMITER:
+                self.__eat()
             return AssignmentExpression(leftExpr, value)
         
         return leftExpr
