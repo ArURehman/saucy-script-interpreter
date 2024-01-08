@@ -7,6 +7,7 @@ from Parser.AST.Expressions.Identifier import Identifier
 from Parser.AST.Expressions.NumericLiteral import NumericLiteral
 from Parser.AST.Expressions.NullLiteral import NullLiteral
 from Parser.AST.Expressions.BooleanLiteral import BooleanLiteral
+from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
 
 from Parser.AST.Statements.VariableDeclaration import VariableDeclaration
 
@@ -30,7 +31,7 @@ class Parser:
     def __expect(self, tokenType: TT, error: str) -> Token:
         token = self.__eat()
         if not token or token.token_type != tokenType:
-            raise Exception(f"Error: {error} - Expected: {tokenType}")
+            raise Exception(f"Error: {error} - Token: {token} - Expected: {tokenType}")
             exit(1)
         return token
     
@@ -80,6 +81,21 @@ class Parser:
             
         return left
     
+    def __assignmentExpression(self) -> Expression:
+        leftExpr = self.__shiftBinaryExpression()
+        
+        if self.__get().token_type == TT.DELIMITER:
+            self.__eat()
+        
+        if self.__get().token_type == TT.EQUALS:
+            self.__eat()
+            value = self.__assignmentExpression()
+            if self.__get().token_type == TT.DELIMITER:
+                self.__eat()
+            return AssignmentExpression(leftExpr, value)
+        
+        return leftExpr
+    
     # Parses variable declaration statements 
     def __variableDeclaration(self) -> Statement:
         let = self.__expect(TT.LET, "Unexpected Token").value 
@@ -92,12 +108,11 @@ class Parser:
         self.__expect(TT.EQUALS, "Unexpected Token")
 
         declaration = VariableDeclaration(identifier, self.__parseExpression())
-        self.__expect(TT.DELIMITER, "Unexpected Token")        
         return declaration 
     
     # Calls parse function with lowest Precedence in the AST
     def __parseExpression(self) -> Expression:
-        return self.__shiftBinaryExpression()
+        return self.__assignmentExpression()
     
     # Parses Statements first then expressions
     def __parseStatement(self) -> Statement:

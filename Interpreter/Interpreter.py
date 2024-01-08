@@ -9,6 +9,7 @@ from Interpreter.Environment.SymbolTable import SymbolTable
 
 from Parser.AST.NodeType import NodeType as NT
 from Parser.AST.Statement import Statement
+from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
 
 from typing import Union
 
@@ -36,14 +37,29 @@ class Interpreter:
         left = self.__evaluate(binaryOperation.left, table)
         right = self.__evaluate(binaryOperation.right, table)
         
+        if not (hasattr(left, 'kind') and hasattr(right, 'kind')):
+            return NullValue()
+        
         if left.kind == VT.NUMBER and right.kind == VT.NUMBER:
             return self.__makeCalculation(left.value, right.value, binaryOperation.operator.value)        
         
         return NullValue()
     
+    # Evaluates to check existence of identifier 
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
         return result
+    
+    # Handles variable declaration
+    def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
+        value = self.__evaluate(declaration.value, table) if declaration.value else NullValue()
+        return table.declareVariable(declaration.identifier, value)
+    
+    # Handles variable assignment
+    def __variableAssignment(self, node: AssignmentExpression, table: SymbolTable) -> RuntimeValue:
+        if node.identifier.kind != NT.IDENTIFIER:
+            raise Exception(f"Invalid Token: {node.identifier}")
+        return table.assignVariable(node.identifier.string, self.__evaluate(node.value, table))
     
     # Runs each statement inside program 
     def __program(self, program: NT.PROGRAM, table: SymbolTable) -> RuntimeValue:
@@ -60,10 +76,14 @@ class Interpreter:
             return NumberValue(node.value)
         elif kind == NT.NULL_LITERAL:
             return NullValue()
+        elif kind == NT.ASSIGNMENT_EXPRESSION:
+            return self.__variableAssignment(node, table)
         elif kind == NT.IDENTIFIER:
             return self.__evaluateIdentifier(node.string, table)
         elif kind == NT.BINARY_EXPRESSTION:
             return self.__binaryExpression(node, table)
+        elif kind == NT.VARIABLE_DECLARATION:
+            return self.__variableDeclaration(node, table)
         elif kind == NT.PROGRAM:
             return self.__program(node, table)
         else:
