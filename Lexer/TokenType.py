@@ -26,15 +26,16 @@ class TokenType(Enum):
     RELATIONAL_OPERATOR = auto()
         
     #Literal
-    LEFT_ROUND_PAREN = auto()
-    RIGHT_ROUND_PAREN = auto()
-    LEFT_CURLY_PAREN = auto()
-    RIGHT_CURLY_PAREN = auto()
-    LEFT_BRACE = auto()
-    RIGHT_BRACE = auto()
+    LEFT_ROUND_PAREN = auto() # (
+    RIGHT_ROUND_PAREN = auto() # )
+    LEFT_CURLY_PAREN = auto() # {
+    RIGHT_CURLY_PAREN = auto() # }
+    LEFT_BRACKET = auto() # [
+    RIGHT_BRACKET = auto() # ]
     PUNCTUATOR = auto()
     COMMA = auto()
     COLON = auto()
+    DOT = auto()
     
     
     #Keywords

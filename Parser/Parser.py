@@ -2,8 +2,12 @@ from Parser.AST.Expression import Expression
 from Parser.AST.Statement import Statement
 from Parser.AST.Program import Program
 
+from Parser.AST.NodeType import NodeType as NT
+
 from Parser.AST.Expressions.BinaryExpression import BinaryExpression
 from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
+from Parser.AST.Expressions.MemberExpression import MemberExpression
+from Parser.AST.Expressions.CallExpression import CallExpression
 
 from Parser.AST.Literals.Identifier import Identifier
 from Parser.AST.Literals.NumericLiteral import NumericLiteral
@@ -48,7 +52,7 @@ class Parser:
         elif token.token_type == TT.PUNCTUATOR:
             self.__eat()
             value = StringLiteral(self.__eat().value)
-            self.__eat()
+            self.__expect(TT.PUNCTUATOR, "Unexpected Token")
             return value
         elif token.token_type == TT.NULL:
             self.__eat()
@@ -67,14 +71,59 @@ class Parser:
         else:
             raise Exception(f"Unexpected Token: {token}")
             exit(1)
+            
+    def __memberExpression(self) -> Expression:
+        obj = self.__primaryExpression()
+        while self.__get().token_type in [TT.DOT, TT.LEFT_BRACKET] :
+            operator = self.__eat()
+            prop = None
+            computed = False
+            if operator.token_type == TT.DOT:
+                computed = False                
+                prop = self.__primaryExpression()
+                if prop.kind != NT.IDENTIFIER and prop.kind != NT.STRING_LITERAL:
+                    raise Exception("Syntax Error: Identifier Not Detected")
+            else:
+                computed = True
+                prop = self.__parseExpression()
+                self.__expect(TT.RIGHT_BRACKET, "Missing Token")
+            
+            obj = MemberExpression(obj, prop, computed)
+        return obj
+    
+    def __callExpression(self, caller: Expression) -> Expression:
+        callExpr = CallExpression(self.__parseArguments(), caller)
+        if self.__get().token_type == TT.LEFT_ROUND_PAREN:
+            callExpr = self.__callExpression(callExpr)
+        return callExpr
+    
+    # Handles call and member expressions recursively
+    def __callMemberExpression(self) -> Expression:
+        member = self.__memberExpression()
+        if self.__get().token_type == TT.LEFT_ROUND_PAREN:
+            return self.__callExpression(member)
+        return member
+    
+    # Parses arguments
+    def __parseArguments(self) -> list[Expression]:
+        self.__expect(TT.LEFT_ROUND_PAREN, "Missing Token")
+        args = [] if self.__get().token_type == TT.RIGHT_ROUND_PAREN else self.__parseArgumentList()
+        self.__expect(TT.RIGHT_ROUND_PAREN, "Missing Token")
+        return args
+    
+    def __parseArgumentList(self) -> list[Expression]:
+        args = [self.__assignmentExpression()]
+        while self.__get().token_type == TT.COMMA and self.__eat():
+            args.append(self.__assignmentExpression())
+        return args
     
     #Prcedence 2 (Used to Parse Multiplicative/Divisive/Modulus:% Expressions)
     def __scaleBinaryExpression(self) -> Expression:
-        left = self.__primaryExpression()
+        left = self.__callMemberExpression()
         
         while self.__get().token_type in [TT.MULTIPLY, TT.DIVIDE, TT.MODULUS]:
             operator = self.__eat()
-            right = self.__primaryExpression()
+            right = self.__callMemberExpression()
             left = BinaryExpression(left, right, operator)
             
         return left
