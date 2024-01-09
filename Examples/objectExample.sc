@@ -1,9 +1,10 @@
 let b = 20
+let z = 0
 let x = {
     a : "20",
     y : 200,
-    z : 300,
+    b,
     complex: {
-        z : b*20
+        z : 30
     }
 };

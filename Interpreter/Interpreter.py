@@ -4,6 +4,8 @@ from Interpreter.Runtime.RuntimeValue import RuntimeValue
 from Interpreter.Runtime.Values.NullValue import NullValue
 from Interpreter.Runtime.Values.NumberValue import NumberValue
 from Interpreter.Runtime.Values.BooleanValue import BooleanValue
+from Interpreter.Runtime.Values.ObjectValue import ObjectValue
+from Interpreter.Runtime.Values.StringValue import StringValue
 
 from Interpreter.Environment.SymbolTable import SymbolTable
 
@@ -49,7 +51,18 @@ class Interpreter:
     # Evaluates to check existence of identifier 
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
-        return result
+        return 
+    
+    # Evaluates object literals 
+    def __evaluateObject(self, obj: NT.OBJECT_LITERAL, table: SymbolTable) -> RuntimeValue:
+        objectVal = ObjectValue()
+        
+        for item in obj.properties:
+            key, value = item.key, item.value
+            runtimeVal = self.__evaluate(value, table) if key != value else table.lookupVariable(key)
+            objectVal.properties[key] = runtimeVal
+        
+        return objectVal
     
     # Handles variable declaration
     def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
@@ -75,6 +88,10 @@ class Interpreter:
         
         if kind == NT.NUMERIC_LITERAL:
             return NumberValue(node.value)
+        elif kind == NT.STRING_LITERAL:
+            return StringValue(node.value)
+        elif kind == NT.OBJECT_LITERAL:
+            return self.__evaluateObject(node, table)
         elif kind == NT.NULL_LITERAL:
             return NullValue()
         elif kind == NT.ASSIGNMENT_EXPRESSION:
