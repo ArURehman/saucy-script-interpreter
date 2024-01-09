@@ -10,20 +10,13 @@ with open('Examples/objectExample.sc', 'r') as iFile:
     fileLines =  iFile.readlines()
 fileLines = ''.join(fileLines)
 
-# Uncomment the above lines for Production 
-
-# fileLines = input('> ') # Only for Development
-
 table = createGlobalEnv()
 
 lexer = Lexer(fileLines)
 tokens = lexer.tokenize()
-# print(tokens) 
 
 parser = Parser(tokens)
 program = parser.parse()
-# print(program) 
 
 interpreter = Interpreter()
-result = interpreter.interpret(program, table)
-# print(result)
+interpreter.interpret(program, table)
