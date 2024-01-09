@@ -1,0 +1,4 @@
+func bhaya(x, y) {
+    let result = x + y;
+}
+print(bhaya(10, 10))

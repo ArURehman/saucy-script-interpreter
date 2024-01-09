@@ -5,8 +5,11 @@ from Interpreter.Runtime.ValueType import ValueType as VT
 
 from Interpreter.Runtime.Values.NumberValue import NumberValue
 
+# Native Functions
 def printFunction(args, table):
     for arg in args:
+        if not hasattr(arg, 'value'):
+            continue
         print(arg.value, end="")
     print('\n')
     return FunctionCall(args, table)

@@ -9,3 +9,4 @@ class ValueType(Enum):
     STRING = auto()
     
     NATIVE_FUNCTION = auto()
+    FUNCTION = auto()

@@ -6,11 +6,11 @@ from Interpreter.Environment.SymbolTable import SymbolTable
 from Interpreter.Helpers.MakeGlobalEnv import createGlobalEnv
 
 fileLines = ''
-with open('Examples/objectExample.sc', 'r') as iFile:
+with open('Examples/funcExample.txt', 'r') as iFile:
     fileLines =  iFile.readlines()
 fileLines = ''.join(fileLines)
 
-table = createGlobalEnv()
+table = createGlobalEnv() # Contains function declarations
 
 lexer = Lexer(fileLines)
 tokens = lexer.tokenize()
@@ -19,4 +19,5 @@ parser = Parser(tokens)
 program = parser.parse()
 
 interpreter = Interpreter()
-interpreter.interpret(program, table)
+result = interpreter.interpret(program, table)
+# print(result)

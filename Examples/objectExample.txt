@@ -8,7 +8,10 @@ let val = {
     }
 };
 
+let omg = "OMG"
 let number = add(foo, 20);
-let num2 = (foo - 30)*20
+let num2 = (foo - 30)*20;
+
 print("Result 1: ", number);
 print("Result 2: ", num2);
+print(omg);

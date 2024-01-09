@@ -18,6 +18,7 @@ from Parser.AST.Literals.ObjectLiteral import ObjectLiteral
 from Parser.AST.Literals.PropertyLiteral import PropertyLiteral
 
 from Parser.AST.Statements.VariableDeclaration import VariableDeclaration
+from Parser.AST.Statements.FunctionDeclaration import FunctionDeclaration
 
 from Lexer.Token import Token
 from Lexer.TokenType import TokenType as TT
@@ -198,7 +199,28 @@ class Parser:
         self.__expect(TT.EQUALS, "Unexpected Token")
 
         declaration = VariableDeclaration(identifier, self.__parseExpression())
-        return declaration 
+        return declaration
+    
+    # TODO: Add if-else expression support
+    
+    def __functionDeclaration(self) -> Statement:
+        self.__eat()
+        funcName = self.__expect(TT.IDENTIFIER, "Missing Token Function Name").value
+        
+        args = self.__parseArguments()
+        params = []
+        for arg in args:
+            if arg.kind != NT.IDENTIFIER:
+                raise Exception("Parameters Expected In Function Declaration")
+            params.append(arg.string)
+        self.__expect(TT.LEFT_CURLY_PAREN, "Missing Token 'Opening Curly Brace'")
+        
+        body = []
+        while self.__get().token_type not in [TT.EOF, TT.RIGHT_CURLY_PAREN]:
+            body.append(self.__parseStatement())
+        self.__expect(TT.RIGHT_CURLY_PAREN, "Missing Token 'Closing Curly Brace'")
+        
+        return FunctionDeclaration(funcName, params, body)
     
     # Calls parse function with lowest Precedence in the AST
     def __parseExpression(self) -> Expression:
@@ -208,6 +230,8 @@ class Parser:
     def __parseStatement(self) -> Statement:
         if self.__get().token_type == TT.LET:
             return self.__variableDeclaration()
+        elif self.__get().token_type == TT.FUNC:
+            return self.__functionDeclaration()
         else:
             return self.__parseExpression()
         
