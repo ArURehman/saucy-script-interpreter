@@ -17,7 +17,11 @@ class NodeType(Enum):
     #Expressions
     EXPRESSION = auto()
     
+    #Literals
+    PROPERTY_LITERAL = auto()
+    OBJECT_LITERAL = auto()
     NUMERIC_LITERAL = auto()
+    STRING_LITERAL = auto()
     NULL_LITERAL = auto()
     IDENTIFIER = auto()
     BOOLEAN_LITERAL = auto()
@@ -25,5 +29,4 @@ class NodeType(Enum):
     BINARY_EXPRESSTION = auto()
     ASSIGNMENT_EXPRESSION = auto()
     UNARY_EXPRESSION = auto()
-    
     

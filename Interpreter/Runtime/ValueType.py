@@ -5,3 +5,5 @@ class ValueType(Enum):
     NULL = auto()
     NUMBER = auto()
     BOOLEAN = auto()
+    OBJECT = auto()
+    STRING = auto()
