@@ -48,7 +48,7 @@ class Interpreter:
         
         return NullValue()
     
-    # Evaluates to check existence of identifier 
+    # Evaluates to check existence of identifier and returns its value
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
         return result
