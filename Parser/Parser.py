@@ -7,6 +7,7 @@ from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
 
 from Parser.AST.Literals.Identifier import Identifier
 from Parser.AST.Literals.NumericLiteral import NumericLiteral
+from Parser.AST.Literals.StringLiteral import StringLiteral
 from Parser.AST.Literals.NullLiteral import NullLiteral
 from Parser.AST.Literals.BooleanLiteral import BooleanLiteral
 from Parser.AST.Literals.ObjectLiteral import ObjectLiteral
@@ -44,6 +45,11 @@ class Parser:
         
         if token.token_type == TT.IDENTIFIER:
             return Identifier(self.__eat().value)
+        elif token.token_type == TT.PUNCTUATOR:
+            self.__eat()
+            value = StringLiteral(self.__eat().value)
+            self.__eat()
+            return value
         elif token.token_type == TT.NULL:
             self.__eat()
             return NullLiteral()

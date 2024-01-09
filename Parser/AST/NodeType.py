@@ -21,6 +21,7 @@ class NodeType(Enum):
     PROPERTY_LITERAL = auto()
     OBJECT_LITERAL = auto()
     NUMERIC_LITERAL = auto()
+    STRING_LITERAL = auto()
     NULL_LITERAL = auto()
     IDENTIFIER = auto()
     BOOLEAN_LITERAL = auto()

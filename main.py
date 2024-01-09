@@ -4,7 +4,7 @@ from Interpreter.Interpreter import Interpreter
 from Interpreter.Environment.SymbolTable import SymbolTable
 
 fileLines = ''
-with open('Examples/objectExample.sc', 'r') as iFile:
+with open('Examples/example.sc', 'r') as iFile:
     fileLines =  iFile.readlines()
 fileLines = ''.join(fileLines)
 
