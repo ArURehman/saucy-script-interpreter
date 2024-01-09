@@ -62,6 +62,7 @@ class Lexer:
                     
                 elif re.match(r'[a-zA-z_\"\']', source_char[0]):
                     string = ""
+                    # TODO: Improve below statement to accept every character in string"
                     while len(source_char) > 0 and re.match(r'[\w\"\']', source_char[0]):
                         string += source_char.pop(0)
                     
