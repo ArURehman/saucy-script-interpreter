@@ -2,3 +2,16 @@ func bhaya(x, y) {
     let result = x + y;
 }
 print(bhaya(10, 10))
+
+func makeAdder(){
+
+    func booYeah(msg){
+        print(msg)
+    }
+
+    booYeah
+
+}
+
+let z = makeAdder()
+z("BOO YEAH")
