@@ -9,6 +9,8 @@ from Parser.AST.Literals.Identifier import Identifier
 from Parser.AST.Literals.NumericLiteral import NumericLiteral
 from Parser.AST.Literals.NullLiteral import NullLiteral
 from Parser.AST.Literals.BooleanLiteral import BooleanLiteral
+from Parser.AST.Literals.ObjectLiteral import ObjectLiteral
+from Parser.AST.Literals.PropertyLiteral import PropertyLiteral
 
 from Parser.AST.Statements.VariableDeclaration import VariableDeclaration
 
@@ -82,8 +84,38 @@ class Parser:
             
         return left
     
+    # Handles Object Assignment {key:value}
+    def __objectAssignment(self) -> Expression:
+        if self.__get().token_type != TT.LEFT_CURLY_PAREN:
+            return self.__shiftBinaryExpression()
+        
+        self.__eat()
+        properties = []
+        
+        while not self.__endOfFile() and self.__get().token_type != TT.RIGHT_CURLY_PAREN:
+            key = self.__expect(TT.IDENTIFIER, "Unexpected Token").value
+            
+            if self.__get().token_type == TT.COMMA: # Case: {key,}
+                self.__eat()
+                properties.append(PropertyLiteral(key))
+                continue
+            elif self.__get().token_type == TT.RIGHT_CURLY_PAREN: # Case: {key}
+                properties.append(PropertyLiteral(key))
+                continue
+            
+            self.__expect(TT.COLON, "Missing Token") # Case: {key:value}
+            value = self.__parseExpression()
+            properties.append(PropertyLiteral(key, value))
+            if self.__get().token_type != TT.RIGHT_CURLY_PAREN:
+                self.__expect(TT.COMMA, "Missing Token")
+                
+        
+        self.__expect(TT.RIGHT_CURLY_PAREN, "Missing Token")
+        return ObjectLiteral(properties)
+    
+    # Handles value assignment to variables (Doesn't declare them)
     def __assignmentExpression(self) -> Expression:
-        leftExpr = self.__shiftBinaryExpression()
+        leftExpr = self.__objectAssignment()
         
         if self.__get().token_type == TT.DELIMITER:
             self.__eat()

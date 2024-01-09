@@ -76,7 +76,7 @@ class Lexer:
                     else:
                         tokens.append(Token(TokenType.IDENTIFIER, string))
                 
-                elif source_char[0] in [' ', '\n', '\t', '']:
+                elif source_char[0] in [' ', '\n', '\t', '', '\r']:
                     source_char.pop(0)
                 
                 else:
