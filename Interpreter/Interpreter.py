@@ -48,7 +48,7 @@ class Interpreter:
         
         return NullValue()
     
-    # Evaluates to check existence of identifier 
+    # Evaluates to check existence of identifier and returns its value
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
         return result
@@ -62,6 +62,18 @@ class Interpreter:
             objectVal.properties[item.key] = runtimeVal
         
         return objectVal
+    
+    def __callExpression(self, callExpr: NT.CALL_EXPRESSION, table: SymbolTable) -> RuntimeValue:
+        args = []
+        for arg in callExpr.arguments:
+            args.append(self.__evaluate(arg, table))
+        
+        function = self.__evaluate(callExpr.caller, table)
+        if function.kind != VT.NATIVE_FUNCTION:
+            raise Exception(f'Specified function {function} does not exist')
+
+        result = function.call(args, table)
+        return result
     
     # Handles variable declaration
     def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
@@ -84,13 +96,15 @@ class Interpreter:
     # Evaluates each statement according to it's type
     def __evaluate(self, node: Statement, table: SymbolTable) -> RuntimeValue:
         kind = node.kind
-        
+            
         if kind == NT.NUMERIC_LITERAL:
             return NumberValue(node.value)
         elif kind == NT.STRING_LITERAL:
             return StringValue(node.value)
         elif kind == NT.OBJECT_LITERAL:
             return self.__evaluateObject(node, table)
+        elif kind == NT.CALL_EXPRESSION:
+            return self.__callExpression(node, table)
         elif kind == NT.NULL_LITERAL:
             return NullValue()
         elif kind == NT.ASSIGNMENT_EXPRESSION:

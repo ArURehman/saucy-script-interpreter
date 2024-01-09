@@ -16,6 +16,8 @@ class NodeType(Enum):
     
     #Expressions
     EXPRESSION = auto()
+    MEMBER_EXPRESSION = auto()
+    CALL_EXPRESSION = auto()
     
     #Literals
     PROPERTY_LITERAL = auto()

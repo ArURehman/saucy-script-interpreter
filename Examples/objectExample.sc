@@ -1,12 +1,10 @@
-let b = "20";
-let z = 0
-let x = {
-    a : "20",
-    y : 200,
-    b,
+let foo = 500/2;
+let val = {
+    x: 100,
+    foo,
     complex: {
-        val : {
-            val2 : z+20
-        }
+        bar: true
     }
 };
+
+print(foo, 45);
