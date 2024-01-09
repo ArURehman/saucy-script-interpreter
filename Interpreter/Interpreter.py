@@ -51,16 +51,15 @@ class Interpreter:
     # Evaluates to check existence of identifier 
     def __evaluateIdentifier(self, identifier: NT.IDENTIFIER, table: SymbolTable) -> RuntimeValue:
         result = table.lookupVariable(identifier)
-        return 
+        return result
     
     # Evaluates object literals 
     def __evaluateObject(self, obj: NT.OBJECT_LITERAL, table: SymbolTable) -> RuntimeValue:
-        objectVal = ObjectValue()
+        objectVal = ObjectValue({})
         
         for item in obj.properties:
-            key, value = item.key, item.value
-            runtimeVal = self.__evaluate(value, table) if key != value else table.lookupVariable(key)
-            objectVal.properties[key] = runtimeVal
+            runtimeVal = self.__evaluate(item.value, table) if item.value else table.lookupVariable(item.key)
+            objectVal.properties[item.key] = runtimeVal
         
         return objectVal
     
