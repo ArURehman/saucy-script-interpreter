@@ -25,7 +25,7 @@ class SymbolTable:
         if self.parent is None:
             raise Exception(f"Resolution Error: Couldn't resolve variable '{variableName}'")
         
-        return self.parent.resolve(variableName)
+        return self.parent.resolveVariable(variableName)
     
     def assignVariable(self, variableName: str, value: RuntimeValue) -> RuntimeValue:
         table = self.resolveVariable(variableName)

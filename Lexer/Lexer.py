@@ -68,21 +68,21 @@ class Lexer:
                     
                 elif re.match(r'[a-zA-z_\"\']', source_char[0]):
                     string = ""
-                    # TODO: Improve below statement to accept every character in string"
-                    while len(source_char) > 0 and re.match(r'[\w\"\']', source_char[0]):
-                        string += source_char.pop(0)
-                    
-                    keyword = Keyword.keywords.get(string, None)
-                    if keyword:
-                        tokens.append(Token(keyword, string))
-                    elif string.count("'") > 0 or string.count('"'):
-                        punc_1, punc_2, string = string[0], string[-1], string[1:-1]
-                        tokens.append(Token(TokenType.PUNCTUATOR, punc_1))
-                        tokens.append(Token(TokenType.STRING, string))
-                        tokens.append(Token(TokenType.PUNCTUATOR, punc_2))
+                    if source_char[0] not in ["'", '"']:
+                        while len(source_char) > 0 and re.match(r'\w', source_char[0]):
+                            string += source_char.pop(0)
+                        keyword = Keyword.keywords.get(string, None)
+                        if keyword:
+                            tokens.append(Token(keyword, string))
+                        else:
+                            tokens.append(Token(TokenType.IDENTIFIER, string))
                     else:
-                        tokens.append(Token(TokenType.IDENTIFIER, string))
-                
+                        tokens.append(Token(TokenType.PUNCTUATOR, source_char.pop(0)))
+                        while len(source_char) > 0 and source_char[0] not in ["'", '"']:
+                            string += source_char.pop(0)
+                        tokens.append(Token(TokenType.STRING, string))
+                        tokens.append(Token(TokenType.PUNCTUATOR, source_char.pop(0)))
+                                    
                 elif source_char[0] in [' ', '\n', '\t', '', '\r']:
                     source_char.pop(0)
                 

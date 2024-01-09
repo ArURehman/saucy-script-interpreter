@@ -6,6 +6,7 @@ from Interpreter.Runtime.Values.NumberValue import NumberValue
 from Interpreter.Runtime.Values.BooleanValue import BooleanValue
 from Interpreter.Runtime.Values.ObjectValue import ObjectValue
 from Interpreter.Runtime.Values.StringValue import StringValue
+from Interpreter.Runtime.Values.FunctionValue import FunctionValue
 
 from Interpreter.Environment.SymbolTable import SymbolTable
 
@@ -63,17 +64,40 @@ class Interpreter:
         
         return objectVal
     
+    # Handles calling functions
     def __callExpression(self, callExpr: NT.CALL_EXPRESSION, table: SymbolTable) -> RuntimeValue:
         args = []
         for arg in callExpr.arguments:
             args.append(self.__evaluate(arg, table))
         
         function = self.__evaluate(callExpr.caller, table)
-        if function.kind != VT.NATIVE_FUNCTION:
-            raise Exception(f'Specified function {function} does not exist')
-
-        result = function.call(args, table)
-        return result
+        if function.kind == VT.NATIVE_FUNCTION:
+            result = function.call(args, table)
+            return result
+        elif function.kind == VT.FUNCTION:
+            scope = SymbolTable(function.table)
+            for i in range(len(function.parameters)):
+                if i > len(args):
+                    raise Exception("Invalid Number of Arguments")
+                var = function.parameters[i]
+                arg = args[i]
+                table.declareVariable(var, arg)
+            result = NullValue()
+            for stmt in function.body:
+                result = self.__evaluate(stmt, scope)
+            return result
+                
+        raise Exception(f'Specified function {function} does not exist')
+        
+    # Handles Function Declaration
+    def __functionDeclaration(self, node: NT.FUNC_DECLARATION, table: SymbolTable) -> RuntimeValue:
+        function = FunctionValue(
+            node.funcName,
+            node.parameters,
+            node.body, 
+            table
+        )
+        return table.declareVariable(node.funcName, function)
     
     # Handles variable declaration
     def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
@@ -115,6 +139,8 @@ class Interpreter:
             return self.__binaryExpression(node, table)
         elif kind == NT.VARIABLE_DECLARATION:
             return self.__variableDeclaration(node, table)
+        elif kind == NT.FUNC_DECLARATION:
+            return self.__functionDeclaration(node, table)
         elif kind == NT.PROGRAM:
             return self.__program(node, table)
         else:
