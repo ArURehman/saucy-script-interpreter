@@ -84,7 +84,7 @@ class Interpreter:
     # Evaluates each statement according to it's type
     def __evaluate(self, node: Statement, table: SymbolTable) -> RuntimeValue:
         kind = node.kind
-        
+            
         if kind == NT.NUMERIC_LITERAL:
             return NumberValue(node.value)
         elif kind == NT.STRING_LITERAL:

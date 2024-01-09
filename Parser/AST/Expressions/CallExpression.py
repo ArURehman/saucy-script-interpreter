@@ -3,10 +3,10 @@ from Parser.AST.NodeType import NodeType
 
 class CallExpression(Expression):
     
-    def __init__(self, arguments: list[Expression], calle: Expression) -> None:
+    def __init__(self, calle: Expression, arguments: list[Expression]) -> None:
         super().__init__(NodeType.CALL_EXPRESSION)
-        self.arguments = arguments
         self.calle = calle
+        self.arguments = arguments
         
     def __repr__(self):
         return f"{self.calle}:{self.arguments}"

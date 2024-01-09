@@ -7,4 +7,4 @@ let val = {
     }
 };
 
-foo = val.x
+foo = val.foo;

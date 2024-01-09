@@ -74,6 +74,7 @@ class Parser:
             
     def __memberExpression(self) -> Expression:
         obj = self.__primaryExpression()
+        
         while self.__get().token_type in [TT.DOT, TT.LEFT_BRACKET] :
             operator = self.__eat()
             prop = None
@@ -89,10 +90,11 @@ class Parser:
                 self.__expect(TT.RIGHT_BRACKET, "Missing Token")
             
             obj = MemberExpression(obj, prop, computed)
+                    
         return obj
     
     def __callExpression(self, caller: Expression) -> Expression:
-        callExpr = CallExpression(self.__parseArguments(), caller)
+        callExpr = CallExpression(caller, self.__parseArguments())
         if self.__get().token_type == TT.LEFT_ROUND_PAREN:
             callExpr = self.__callExpression(callExpr)
         return callExpr
@@ -125,7 +127,7 @@ class Parser:
             operator = self.__eat()
             right = self.__callMemberExpression()
             left = BinaryExpression(left, right, operator)
-            
+        
         return left
     
     #Prcedence 2 (Used to Parse Additive/Subtractive Expressions)
@@ -136,7 +138,7 @@ class Parser:
             operator = self.__eat()
             right = self.__scaleBinaryExpression()
             left = BinaryExpression(left, right, operator)
-            
+        
         return left
     
     # Handles Object Assignment {key:value}
