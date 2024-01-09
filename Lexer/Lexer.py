@@ -17,6 +17,10 @@ class Lexer:
                 tokens.append(Token(TokenType.LEFT_ROUND_PAREN, source_char.pop(0)))
             elif source_char[0] == ')':
                 tokens.append(Token(TokenType.RIGHT_ROUND_PAREN, source_char.pop(0)))
+            if source_char[0] == '[':
+                tokens.append(Token(TokenType.LEFT_BRACE, source_char.pop(0)))
+            elif source_char[0] == ']':
+                tokens.append(Token(TokenType.RIGHT_BRACE, source_char.pop(0)))
             elif source_char[0] == '{':
                 tokens.append(Token(TokenType.LEFT_CURLY_PAREN, source_char.pop(0)))
             elif source_char[0] == '}':
