@@ -3,9 +3,12 @@ from Interpreter.Runtime.Values.NativeFunctionValue import NativeFunctionValue
 from Interpreter.Runtime.FunctionCall import FunctionCall
 from Interpreter.Runtime.ValueType import ValueType as VT
 
+from Interpreter.Runtime.Values.NumberValue import NumberValue
+
 def printFunction(args, table):
     for arg in args:
         print(arg.value, end="")
+    print('\n')
     return FunctionCall(args, table)
 
 def addFunction(args, table):
@@ -13,8 +16,7 @@ def addFunction(args, table):
     for arg in args:
         if arg.kind == VT.NUMBER:
             result += arg.value
-    print("\n", result)
-    return FunctionCall(args, table)
+    return NumberValue(result)
 
 def createGlobalEnv() -> SymbolTable:
     table = SymbolTable()

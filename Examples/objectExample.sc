@@ -8,4 +8,4 @@ let val = {
 };
 
 print("value", foo)
-add(foo, 30);
+print(add(foo, 30));
