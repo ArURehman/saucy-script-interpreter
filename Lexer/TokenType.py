@@ -31,6 +31,9 @@ class TokenType(Enum):
     LEFT_CURLY_PAREN = auto()
     RIGHT_CURLY_PAREN = auto()
     PUNCTUATOR = auto()
+    COMMA = auto()
+    COLON = auto()
+    
     
     #Keywords
     LET = auto()

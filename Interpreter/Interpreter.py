@@ -9,6 +9,7 @@ from Interpreter.Environment.SymbolTable import SymbolTable
 
 from Parser.AST.NodeType import NodeType as NT
 from Parser.AST.Statement import Statement
+
 from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
 
 from typing import Union

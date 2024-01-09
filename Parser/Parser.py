@@ -3,11 +3,12 @@ from Parser.AST.Statement import Statement
 from Parser.AST.Program import Program
 
 from Parser.AST.Expressions.BinaryExpression import BinaryExpression
-from Parser.AST.Expressions.Identifier import Identifier
-from Parser.AST.Expressions.NumericLiteral import NumericLiteral
-from Parser.AST.Expressions.NullLiteral import NullLiteral
-from Parser.AST.Expressions.BooleanLiteral import BooleanLiteral
 from Parser.AST.Expressions.AssignmentExpression import AssignmentExpression
+
+from Parser.AST.Literals.Identifier import Identifier
+from Parser.AST.Literals.NumericLiteral import NumericLiteral
+from Parser.AST.Literals.NullLiteral import NullLiteral
+from Parser.AST.Literals.BooleanLiteral import BooleanLiteral
 
 from Parser.AST.Statements.VariableDeclaration import VariableDeclaration
 
