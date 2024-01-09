@@ -7,4 +7,4 @@ let val = {
     }
 };
 
-foo = val.foo;
+print(foo, 45);

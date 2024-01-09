@@ -63,6 +63,18 @@ class Interpreter:
         
         return objectVal
     
+    def __callExpression(self, callExpr: NT.CALL_EXPRESSION, table: SymbolTable) -> RuntimeValue:
+        args = []
+        for arg in callExpr.arguments:
+            args.append(self.__evaluate(arg, table))
+        
+        function = self.__evaluate(callExpr.caller, table)
+        if function.kind != VT.NATIVE_FUNCTION:
+            raise Exception(f'Specified function {function} does not exist')
+
+        result = function.call(args, table)
+        return result
+    
     # Handles variable declaration
     def __variableDeclaration(self, declaration: NT.VARIABLE_DECLARATION, table: SymbolTable) -> RuntimeValue:
         value = self.__evaluate(declaration.value, table) if declaration.value else NullValue()
@@ -91,6 +103,8 @@ class Interpreter:
             return StringValue(node.value)
         elif kind == NT.OBJECT_LITERAL:
             return self.__evaluateObject(node, table)
+        elif kind == NT.CALL_EXPRESSION:
+            return self.__callExpression(node, table)
         elif kind == NT.NULL_LITERAL:
             return NullValue()
         elif kind == NT.ASSIGNMENT_EXPRESSION:

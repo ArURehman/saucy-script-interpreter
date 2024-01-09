@@ -8,6 +8,7 @@ class SymbolTable:
     
     def __init__(self, parent: Optional[SymbolTable]=None) -> None:
         self.parent = parent
+        self.globals = True if parent else False
         self.variables = {}
         
     def declareVariable(self, variableName: str, value: RuntimeValue) -> RuntimeValue:

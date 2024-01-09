@@ -7,3 +7,5 @@ class ValueType(Enum):
     BOOLEAN = auto()
     OBJECT = auto()
     STRING = auto()
+    
+    NATIVE_FUNCTION = auto()
