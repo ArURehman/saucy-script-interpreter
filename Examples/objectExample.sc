@@ -7,4 +7,5 @@ let val = {
     }
 };
 
-print(foo, 45);
+print("value", foo)
+add(foo, 30);
